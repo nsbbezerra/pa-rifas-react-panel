@@ -33,6 +33,7 @@ export default function Index() {
             "repeat(2, 1fr)",
           ]}
           gap={[5, 5, 10, 10, 10]}
+          mb={10}
         >
           <Box
             bg={useColorModeValue("white", "whiteAlpha.100")}

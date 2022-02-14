@@ -10,8 +10,10 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { FaMoon, FaSun } from "react-icons/fa";
-import { AiFillHome } from "react-icons/ai";
+import { AiFillHome, AiOutlineMenu } from "react-icons/ai";
 import Logo from "../assets/logo.svg";
+import { useContext } from "react";
+import DrawerContext from "../context/Drawer";
 
 interface IProps {
   title: string;
@@ -20,20 +22,22 @@ interface IProps {
 export default function Header({ title }: IProps) {
   const { colorMode, toggleColorMode } = useColorMode();
   const navigate = useNavigate();
+
+  const { state, setState } = useContext(DrawerContext);
+
   return (
     <Box
       h={"60px"}
       bg={useColorModeValue("white", "whiteAlpha.50")}
       zIndex={1000}
       borderBottomWidth="1px"
+      position={"sticky"}
     >
       <Flex
         align={"center"}
         justify={"space-between"}
         h="100%"
         px={[5, 5, 10, 10, 10]}
-        pos="sticky"
-        mt={0}
       >
         <HStack>
           <Image
@@ -56,6 +60,13 @@ export default function Header({ title }: IProps) {
             aria-label="theme"
             icon={colorMode === "light" ? <FaMoon /> : <FaSun />}
             onClick={toggleColorMode}
+          />
+          <IconButton
+            aria-label="home"
+            icon={<AiOutlineMenu />}
+            onClick={() => setState({ open: !state.open })}
+            variant="outline"
+            d={["flex", "flex", "none", "none", "none"]}
           />
         </HStack>
       </Flex>

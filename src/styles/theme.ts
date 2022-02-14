@@ -2,6 +2,11 @@ import { extendTheme, theme } from "@chakra-ui/react";
 
 const themeApp = extendTheme({
   ...theme,
+  fonts: {
+    body: "Roboto Condensed, sans-serif",
+    heading: "Roboto Condensed, sans-serif",
+    mono: "Roboto Condensed, sans-serif",
+  },
   components: {
     Button: {
       baseStyle: { _focus: { boxShadow: "none" } },

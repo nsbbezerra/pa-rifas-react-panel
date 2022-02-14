@@ -1,4 +1,4 @@
-import { FC, Fragment } from "react";
+import { FC, Fragment, useContext } from "react";
 import {
   Grid,
   Box,
@@ -7,6 +7,13 @@ import {
   useColorModeValue,
   Stack,
   HStack,
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
 } from "@chakra-ui/react";
 import Logo from "../assets/logo.svg";
 import {
@@ -20,9 +27,132 @@ import {
 import { MdKeyboardArrowRight } from "react-icons/md";
 import Routing from "../routes/routes";
 import { useNavigate } from "react-router-dom";
+import DrawerContext from "../context/Drawer";
 
 const Layout: FC = () => {
   const navigate = useNavigate();
+  const { state, setState } = useContext(DrawerContext);
+
+  const MenuItems = () => (
+    <Flex direction={"column"} align="center">
+      <Image src={Logo} w="50%" />
+
+      <Stack mt={10} w="100%">
+        <Flex
+          align={"center"}
+          justify="space-between"
+          fontSize={"lg"}
+          cursor="pointer"
+          _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
+          px={3}
+          py={2}
+          fontWeight="semibold"
+          rounded={"sm"}
+          color={useColorModeValue("gray.700", "gray.100")}
+          onClick={() => navigate("/clientes")}
+        >
+          <HStack>
+            <AiOutlineUser />
+            <span>Clientes</span>
+          </HStack>
+          <MdKeyboardArrowRight />
+        </Flex>
+        <Flex
+          align={"center"}
+          justify="space-between"
+          fontSize={"lg"}
+          cursor="pointer"
+          _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
+          px={3}
+          py={2}
+          fontWeight="semibold"
+          rounded={"sm"}
+          color={useColorModeValue("gray.700", "gray.100")}
+          onClick={() => navigate("/pedidos")}
+        >
+          <HStack>
+            <AiOutlineFileMarkdown />
+            <span>Pedidos</span>
+          </HStack>
+          <MdKeyboardArrowRight />
+        </Flex>
+        <Flex
+          align={"center"}
+          justify="space-between"
+          fontSize={"lg"}
+          cursor="pointer"
+          _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
+          px={3}
+          py={2}
+          fontWeight="semibold"
+          rounded={"sm"}
+          color={useColorModeValue("gray.700", "gray.100")}
+          onClick={() => navigate("/criarrifa")}
+        >
+          <HStack>
+            <AiOutlineSave />
+            <span>Criar Rifa</span>
+          </HStack>
+          <MdKeyboardArrowRight />
+        </Flex>
+        <Flex
+          align={"center"}
+          justify="space-between"
+          fontSize={"lg"}
+          cursor="pointer"
+          _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
+          px={3}
+          py={2}
+          fontWeight="semibold"
+          rounded={"sm"}
+          color={useColorModeValue("gray.700", "gray.100")}
+        >
+          <HStack>
+            <AiOutlineTool />
+            <span>Rifas</span>
+          </HStack>
+          <MdKeyboardArrowRight />
+        </Flex>
+        <Flex
+          align={"center"}
+          justify="space-between"
+          fontSize={"lg"}
+          cursor="pointer"
+          _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
+          px={3}
+          py={2}
+          fontWeight="semibold"
+          rounded={"sm"}
+          color={useColorModeValue("gray.700", "gray.100")}
+        >
+          <HStack>
+            <AiOutlinePercentage />
+            <span>Cupons</span>
+          </HStack>
+          <MdKeyboardArrowRight />
+        </Flex>
+        <Flex
+          align={"center"}
+          justify="space-between"
+          fontSize={"lg"}
+          cursor="pointer"
+          _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
+          px={3}
+          py={2}
+          fontWeight="semibold"
+          rounded={"sm"}
+          color={useColorModeValue("gray.700", "gray.100")}
+        >
+          <HStack>
+            <AiOutlineShoppingCart />
+            <span>Compras</span>
+          </HStack>
+          <MdKeyboardArrowRight />
+        </Flex>
+      </Stack>
+    </Flex>
+  );
+
   return (
     <Fragment>
       <Grid
@@ -43,119 +173,7 @@ const Layout: FC = () => {
           borderRightWidth="1px"
           d={["none", "none", "flex", "flex", "flex"]}
         >
-          <Image src={Logo} w="50%" />
-
-          <Stack mt={10} w="100%">
-            <Flex
-              align={"center"}
-              justify="space-between"
-              fontSize={"lg"}
-              cursor="pointer"
-              _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
-              px={3}
-              py={2}
-              fontWeight="semibold"
-              rounded={"sm"}
-              color={useColorModeValue("gray.700", "gray.100")}
-              onClick={() => navigate("/clientes")}
-            >
-              <HStack>
-                <AiOutlineUser />
-                <span>Clientes</span>
-              </HStack>
-              <MdKeyboardArrowRight />
-            </Flex>
-            <Flex
-              align={"center"}
-              justify="space-between"
-              fontSize={"lg"}
-              cursor="pointer"
-              _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
-              px={3}
-              py={2}
-              fontWeight="semibold"
-              rounded={"sm"}
-              color={useColorModeValue("gray.700", "gray.100")}
-            >
-              <HStack>
-                <AiOutlineFileMarkdown />
-                <span>Pedidos</span>
-              </HStack>
-              <MdKeyboardArrowRight />
-            </Flex>
-            <Flex
-              align={"center"}
-              justify="space-between"
-              fontSize={"lg"}
-              cursor="pointer"
-              _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
-              px={3}
-              py={2}
-              fontWeight="semibold"
-              rounded={"sm"}
-              color={useColorModeValue("gray.700", "gray.100")}
-            >
-              <HStack>
-                <AiOutlineSave />
-                <span>Criar Rifa</span>
-              </HStack>
-              <MdKeyboardArrowRight />
-            </Flex>
-            <Flex
-              align={"center"}
-              justify="space-between"
-              fontSize={"lg"}
-              cursor="pointer"
-              _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
-              px={3}
-              py={2}
-              fontWeight="semibold"
-              rounded={"sm"}
-              color={useColorModeValue("gray.700", "gray.100")}
-            >
-              <HStack>
-                <AiOutlineTool />
-                <span>Rifas</span>
-              </HStack>
-              <MdKeyboardArrowRight />
-            </Flex>
-            <Flex
-              align={"center"}
-              justify="space-between"
-              fontSize={"lg"}
-              cursor="pointer"
-              _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
-              px={3}
-              py={2}
-              fontWeight="semibold"
-              rounded={"sm"}
-              color={useColorModeValue("gray.700", "gray.100")}
-            >
-              <HStack>
-                <AiOutlinePercentage />
-                <span>Cupons</span>
-              </HStack>
-              <MdKeyboardArrowRight />
-            </Flex>
-            <Flex
-              align={"center"}
-              justify="space-between"
-              fontSize={"lg"}
-              cursor="pointer"
-              _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
-              px={3}
-              py={2}
-              fontWeight="semibold"
-              rounded={"sm"}
-              color={useColorModeValue("gray.700", "gray.100")}
-            >
-              <HStack>
-                <AiOutlineShoppingCart />
-                <span>Compras</span>
-              </HStack>
-              <MdKeyboardArrowRight />
-            </Flex>
-          </Stack>
+          <MenuItems />
         </Flex>
         <Box
           bg={useColorModeValue("gray.50", "")}
@@ -166,6 +184,20 @@ const Layout: FC = () => {
           <Routing />
         </Box>
       </Grid>
+
+      <Drawer
+        isOpen={state.open}
+        placement="left"
+        onClose={() => setState({ open: false })}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerBody mt={10}>
+            <MenuItems />
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </Fragment>
   );
 };
