@@ -145,7 +145,7 @@ export default function NewRaffle() {
                   <DatePicker
                     selected={startDate}
                     onChange={(date: Date | null) => setStartDate(date)}
-                    customInput={<CustomInput inputRef={inputRef} />}
+                    customInput={<CustomInput ref={inputRef} />}
                     locale="pt_br"
                     dateFormat="dd/MM/yyyy 'às' hh:mm aa"
                     timeFormat="p"

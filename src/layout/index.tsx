@@ -106,6 +106,7 @@ const Layout: FC = () => {
           fontWeight="semibold"
           rounded={"sm"}
           color={useColorModeValue("gray.700", "gray.100")}
+          onClick={() => navigate("/rifas")}
         >
           <HStack>
             <AiOutlineTool />

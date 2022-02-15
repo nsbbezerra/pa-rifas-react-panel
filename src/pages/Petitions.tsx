@@ -34,10 +34,12 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   Text,
+  Icon,
+  Badge,
 } from "@chakra-ui/react";
 import { Fragment, useRef, useState } from "react";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
-import { MdKeyboardArrowDown } from "react-icons/md";
+import { MdKeyboardArrowDown, MdKeyboardArrowRight } from "react-icons/md";
 import Header from "../components/Header";
 
 export default function Petitions() {
@@ -58,6 +60,7 @@ export default function Petitions() {
           mt={5}
           w="100%"
           mb={5}
+          overflow="hidden"
         >
           <Box overflowX="auto">
             <Table size={"sm"} w="100%" mt={3}>
@@ -83,12 +86,10 @@ export default function Petitions() {
                   <Td w="10%" minW={"32"}>
                     R$ 700,00
                   </Td>
-                  <Td
-                    w="10%"
-                    bg={useColorModeValue("yellow.400", "yellow.200")}
-                    color={"gray.800"}
-                  >
-                    Aguardando
+                  <Td w="10%" color={"gray.800"}>
+                    <Badge p={1} colorScheme="yellow">
+                      Aguardando
+                    </Badge>
                   </Td>
                   <Td w="10%">
                     <Menu>
@@ -129,14 +130,19 @@ export default function Petitions() {
             w="100%"
             align={"center"}
           >
-            <Text
-              d={["block", "block", "block", "block", "none"]}
-              color={useColorModeValue("red.500", "red.200")}
-              fontSize="xs"
-              fontWeight={"semibold"}
-            >
-              Arraste para o lado
-            </Text>
+            <HStack>
+              <Text
+                d={["block", "block", "block", "block", "none"]}
+                fontSize="xs"
+                fontWeight={"semibold"}
+              >
+                Arraste para o lado
+              </Text>
+              <Icon
+                as={MdKeyboardArrowRight}
+                d={["block", "block", "block", "block", "none"]}
+              />
+            </HStack>
             <HStack>
               <IconButton
                 aria-label="previous"
