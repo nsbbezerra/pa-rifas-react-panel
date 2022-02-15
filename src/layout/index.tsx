@@ -132,24 +132,6 @@ const Layout: FC = () => {
           </HStack>
           <MdKeyboardArrowRight />
         </Flex>
-        <Flex
-          align={"center"}
-          justify="space-between"
-          fontSize={"lg"}
-          cursor="pointer"
-          _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
-          px={3}
-          py={2}
-          fontWeight="semibold"
-          rounded={"sm"}
-          color={useColorModeValue("gray.700", "gray.100")}
-        >
-          <HStack>
-            <AiOutlineShoppingCart />
-            <span>Compras</span>
-          </HStack>
-          <MdKeyboardArrowRight />
-        </Flex>
       </Stack>
     </Flex>
   );
