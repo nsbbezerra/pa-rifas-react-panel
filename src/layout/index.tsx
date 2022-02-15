@@ -9,8 +9,6 @@ import {
   HStack,
   Drawer,
   DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
@@ -18,9 +16,7 @@ import {
 import Logo from "../assets/logo.svg";
 import {
   AiOutlineFileMarkdown,
-  AiOutlinePercentage,
   AiOutlineSave,
-  AiOutlineShoppingCart,
   AiOutlineTool,
   AiOutlineUser,
 } from "react-icons/ai";
@@ -34,7 +30,7 @@ const Layout: FC = () => {
   const { state, setState } = useContext(DrawerContext);
 
   const MenuItems = () => (
-    <Flex direction={"column"} align="center">
+    <Flex direction={"column"} align="center" py={10}>
       <Image src={Logo} w="50%" />
 
       <Stack mt={10} w="100%">
@@ -111,24 +107,6 @@ const Layout: FC = () => {
           <HStack>
             <AiOutlineTool />
             <span>Rifas</span>
-          </HStack>
-          <MdKeyboardArrowRight />
-        </Flex>
-        <Flex
-          align={"center"}
-          justify="space-between"
-          fontSize={"lg"}
-          cursor="pointer"
-          _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
-          px={3}
-          py={2}
-          fontWeight="semibold"
-          rounded={"sm"}
-          color={useColorModeValue("gray.700", "gray.100")}
-        >
-          <HStack>
-            <AiOutlinePercentage />
-            <span>Cupons</span>
           </HStack>
           <MdKeyboardArrowRight />
         </Flex>

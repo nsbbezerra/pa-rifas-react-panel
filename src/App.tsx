@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import Layout from "./layout";
 import DrawerContext from "./hooks/useDrawer";
 import "react-datepicker/dist/react-datepicker.css";
+import "./styles/style.css";
 
 function App() {
   return (

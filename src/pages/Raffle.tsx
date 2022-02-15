@@ -1,5 +1,5 @@
 import Header from "../components/Header";
-import { Fragment } from "react";
+import { forwardRef, Fragment, useRef, useState } from "react";
 import {
   Badge,
   Box,
@@ -17,10 +17,46 @@ import {
   StatNumber,
   Text,
   useColorModeValue,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  FormControl,
+  FormLabel,
+  Input,
+  Textarea,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
-import { AiOutlineEdit } from "react-icons/ai";
+import { AiOutlineCalendar, AiOutlineEdit } from "react-icons/ai";
+import DatePicker, { registerLocale } from "react-datepicker";
+import pt_br from "date-fns/locale/pt-BR";
+
+registerLocale("pt_br", pt_br);
 
 export default function Raffle() {
+  const inputRef = useRef(null);
+  const [information, setInformation] = useState<boolean>(false);
+  const [trophy, setTrophy] = useState<boolean>(false);
+  const [drawn, setDrawn] = useState<boolean>(false);
+  const [winner, setWinner] = useState<boolean>(false);
+  const [startDate, setStartDate] = useState<Date | null>(new Date());
+
+  const CustomInput = forwardRef((props: any, ref) => {
+    return (
+      <InputGroup>
+        <Input {...props} ref={ref} />
+        <InputRightElement
+          pointerEvents="none"
+          children={<AiOutlineCalendar />}
+        />
+      </InputGroup>
+    );
+  });
+
   return (
     <Fragment>
       <Header title="Informações" />
@@ -54,7 +90,12 @@ export default function Raffle() {
                 ajustar aspectos visuais antes de utilizar conteúdo real.
               </Text>
 
-              <Button colorScheme={"blue"} size="sm" mt={3}>
+              <Button
+                colorScheme={"blue"}
+                size="sm"
+                mt={3}
+                onClick={() => setInformation(true)}
+              >
                 Alterar
               </Button>
             </Box>
@@ -122,13 +163,32 @@ export default function Raffle() {
           mt={5}
           h="min-content"
           justify={"space-between"}
-          align="center"
+          align={["flex-start", "center", "center", "center", "center"]}
+          direction={["column", "row", "row", "row", "row"]}
         >
           <Stat>
             <StatLabel>Data do Sorteio</StatLabel>
             <StatNumber>10/10/1000 às 19:00h</StatNumber>
           </Stat>
-          <Button colorScheme={"blue"}>Alterar</Button>
+          <Flex align={"end"}>
+            <FormControl>
+              <FormLabel mb={0}>Nova Data</FormLabel>
+              <DatePicker
+                selected={startDate}
+                onChange={(date: Date | null) => setStartDate(date)}
+                customInput={<CustomInput ref={inputRef} />}
+                locale="pt_br"
+                dateFormat="dd/MM/yyyy 'às' hh:mm aa"
+                timeFormat="p"
+                showTimeInput
+                timeInputLabel="Horário:"
+                showPopperArrow={false}
+              />
+            </FormControl>
+            <Button colorScheme={"blue"} ml={2}>
+              Alterar
+            </Button>
+          </Flex>
         </Flex>
 
         <Grid
@@ -230,6 +290,7 @@ export default function Raffle() {
                 icon={<AiOutlineEdit />}
                 size="sm"
                 colorScheme={"blue"}
+                onClick={() => setTrophy(true)}
               />
             </Text>
             <Box
@@ -241,13 +302,107 @@ export default function Raffle() {
               <Badge p={1} colorScheme="yellow">
                 aguardando
               </Badge>
-              <Button isFullWidth colorScheme={"blue"} size="sm">
+              <Button
+                isFullWidth
+                colorScheme={"blue"}
+                size="sm"
+                onClick={() => setDrawn(true)}
+              >
                 Sortear
               </Button>
             </HStack>
           </Box>
         </Grid>
       </Container>
+
+      <Modal
+        isOpen={information}
+        onClose={() => setInformation(false)}
+        scrollBehavior="inside"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Alterar Informações</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl>
+              <FormLabel>Título da Rifa</FormLabel>
+              <Input placeholder="Título da Rifa" />
+            </FormControl>
+            <FormControl mt={3}>
+              <FormLabel>Descrição da Rifa</FormLabel>
+              <Textarea rows={5} resize="none" />
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button mr={3} onClick={() => setInformation(false)}>
+              Fechar
+            </Button>
+            <Button colorScheme={"blue"}>Salvar</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal
+        isOpen={drawn}
+        onClose={() => setDrawn(false)}
+        scrollBehavior="inside"
+        size="sm"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Sorteio</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl>
+              <FormLabel>Número Sorteado</FormLabel>
+              <Input placeholder="Número sorteado" />
+            </FormControl>
+            <FormControl mt={3}>
+              <FormLabel>Data do Sorteio</FormLabel>
+              <Input placeholder="Data do Sorteio" />
+            </FormControl>
+            <FormControl mt={3}>
+              <FormLabel>Número do Concurso</FormLabel>
+              <Input placeholder="Número do Concurso" />
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button mr={3} onClick={() => setDrawn(false)}>
+              Fechar
+            </Button>
+            <Button colorScheme={"blue"}>Sortear</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal
+        isOpen={trophy}
+        onClose={() => setTrophy(false)}
+        scrollBehavior="inside"
+        size="sm"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Alterar Prêmio</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl>
+              <FormLabel>Descrição do Prêmio</FormLabel>
+              <Input placeholder="Descrição do Prêmio" />
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button mr={3} onClick={() => setTrophy(false)}>
+              Fechar
+            </Button>
+            <Button colorScheme={"blue"}>Salvar</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Fragment>
   );
 }

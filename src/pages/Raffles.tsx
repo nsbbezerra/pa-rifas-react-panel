@@ -40,6 +40,9 @@ import {
   Stack,
   Radio,
   Textarea,
+  MenuGroup,
+  InputGroup,
+  InputRightAddon,
 } from "@chakra-ui/react";
 import { MdKeyboardArrowDown, MdKeyboardArrowRight } from "react-icons/md";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
@@ -48,6 +51,7 @@ import { useNavigate } from "react-router-dom";
 export default function Raffles() {
   const [couponsModal, setCouponsModal] = useState<boolean>(false);
   const [statusModal, setStatusModal] = useState<boolean>(false);
+  const [newCoupon, setNewCoupon] = useState<boolean>(false);
   const navigate = useNavigate();
 
   return (
@@ -143,19 +147,25 @@ export default function Raffles() {
                         Opções
                       </MenuButton>
                       <MenuList>
-                        <MenuItem onClick={() => navigate("/rifa/1293")}>
-                          Visualizar Informações
-                        </MenuItem>
-                        <MenuItem onClick={() => navigate("/vendas/1293")}>
-                          Ver Vendas
-                        </MenuItem>
-                        <MenuItem onClick={() => setCouponsModal(true)}>
-                          Ver Cupons
-                        </MenuItem>
-                        <MenuDivider />
-                        <MenuItem onClick={() => setStatusModal(true)}>
-                          Alterar Status
-                        </MenuItem>
+                        <MenuGroup title="Rifa">
+                          <MenuItem onClick={() => navigate("/rifa/1293")}>
+                            Visualizar Informações
+                          </MenuItem>
+                          <MenuItem onClick={() => setStatusModal(true)}>
+                            Alterar Status
+                          </MenuItem>
+                          <MenuItem onClick={() => navigate("/vendas/1293")}>
+                            Ver Vendas
+                          </MenuItem>
+                        </MenuGroup>
+                        <MenuGroup title="Cupons">
+                          <MenuItem onClick={() => setNewCoupon(true)}>
+                            Criar Cupom
+                          </MenuItem>
+                          <MenuItem onClick={() => setCouponsModal(true)}>
+                            Ver Cupons
+                          </MenuItem>
+                        </MenuGroup>
                       </MenuList>
                     </Menu>
                   </Td>
@@ -280,6 +290,39 @@ export default function Raffles() {
 
           <ModalFooter>
             <Button mr={3} onClick={() => setStatusModal(false)}>
+              Fechar
+            </Button>
+            <Button colorScheme={"blue"}>Salvar</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal
+        isOpen={newCoupon}
+        onClose={() => setNewCoupon(false)}
+        scrollBehavior="inside"
+        size={"sm"}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Criar Cupom</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl>
+              <FormLabel>Cupom</FormLabel>
+              <Input placeholder="Cupom" />
+            </FormControl>
+            <FormControl mt={3}>
+              <FormLabel>Valor do Desconto</FormLabel>
+              <InputGroup>
+                <Input placeholder="Valor do Desconto" />
+                <InputRightAddon children="%" />
+              </InputGroup>
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button mr={3} onClick={() => setNewCoupon(false)}>
               Fechar
             </Button>
             <Button colorScheme={"blue"}>Salvar</Button>
