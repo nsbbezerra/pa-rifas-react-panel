@@ -3,6 +3,7 @@ import {
   Container,
   Flex,
   FormControl,
+  FormLabel,
   HStack,
   Icon,
   IconButton,
@@ -15,13 +16,59 @@ import {
   Thead,
   Tr,
   useColorModeValue,
+  Skeleton,
+  Stack,
 } from "@chakra-ui/react";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import Header from "../components/Header";
+import InputMask from "react-input-mask";
+import { useFetch } from "../hooks/useFetch";
+import { configs } from "../configs";
+
+type Clients = {
+  name: string;
+  cpf: string;
+  email: string;
+  phone: string;
+};
+
+type Count = {
+  count: string;
+};
 
 export default function Clients() {
+  const [cpf, setCpf] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [pages, setPages] = useState<number>(0);
+
+  const { data, error, isValidating } = useFetch(
+    `/findAllClients/${page}/${cpf === "" ? "all" : cpf}`,
+    10000
+  );
+
+  const [clients, setClients] = useState<Clients[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setClients(data.clients);
+      handlePagination(data.count.count);
+    }
+  }, [data]);
+
+  function handlePagination(num: string) {
+    const divisor = parseFloat(num) / configs.pagination;
+    console.log(num);
+    console.log(divisor);
+    console.log(divisor);
+    if (divisor > Math.trunc(divisor) && divisor < divisor + 1) {
+      setPages(Math.trunc(divisor) + 1);
+    } else {
+      setPages(Math.trunc(divisor));
+    }
+  }
+
   return (
     <Fragment>
       <Header title="Clientes" />
@@ -38,7 +85,13 @@ export default function Clients() {
           mb={5}
         >
           <FormControl>
-            <Input placeholder="Digite um nome para buscar" />
+            <FormLabel>Digite um CPF para buscar</FormLabel>
+            <Input
+              as={InputMask}
+              mask="999.999.999-99"
+              placeholder="Digite um CPF para buscar"
+              onChange={(e) => setCpf(e.target.value)}
+            />
           </FormControl>
         </Box>
 
@@ -49,34 +102,50 @@ export default function Clients() {
           shadow={"sm"}
           borderWidth="1px"
         >
-          <Box overflowX={"scroll"}>
-            <Table size={"sm"} mt={3} overflowX="scroll">
-              <Thead>
-                <Tr>
-                  <Th minW="xs">nome</Th>
-                  <Th w="150px" minW="150px">
-                    cpf
-                  </Th>
-                  <Th w="150px" minW="150px">
-                    telefone
-                  </Th>
-                </Tr>
-              </Thead>
+          {clients.length === 0 ? (
+            <Stack mt={5} px={5}>
+              <Skeleton w="100%" h={7} />
+              <Skeleton w="100%" h={7} />
+              <Skeleton w="100%" h={7} />
+              <Skeleton w="100%" h={7} />
+              <Skeleton w="100%" h={7} />
+              <Skeleton w="100%" h={7} />
+              <Skeleton w="100%" h={7} />
+              <Skeleton w="100%" h={7} />
+              <Skeleton w="100%" h={7} />
+              <Skeleton w="100%" h={7} />
+            </Stack>
+          ) : (
+            <Box overflowX={"scroll"}>
+              <Table size={"sm"} mt={3} overflowX="scroll">
+                <Thead>
+                  <Tr>
+                    <Th minW="xs">nome</Th>
+                    <Th w="150px" minW="150px">
+                      cpf
+                    </Th>
+                    <Th w="150px" minW="150px">
+                      telefone
+                    </Th>
+                  </Tr>
+                </Thead>
 
-              <Tbody>
-                <Tr>
-                  <Td minW="xs">Natanael dos Santos Bezerra</Td>
-                  <Td w="150px" minW="150px">
-                    017.067.731-10
-                  </Td>
-                  <Td w="150px" minW="150px">
-                    (63) 99971-1716
-                  </Td>
-                </Tr>
-              </Tbody>
-            </Table>
-          </Box>
-
+                <Tbody>
+                  {clients.map((cli) => (
+                    <Tr key={cli.cpf}>
+                      <Td minW="xs">{cli.name}</Td>
+                      <Td w="150px" minW="150px">
+                        {cli.cpf}
+                      </Td>
+                      <Td w="150px" minW="150px">
+                        {cli.email}
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Box>
+          )}
           <Flex
             justify={[
               "space-between",
@@ -98,7 +167,7 @@ export default function Clients() {
               </Text>
               <Icon
                 as={MdKeyboardArrowRight}
-                d={["block", "block", "block", "block", "none"]}
+                d={["block", "block", "block", "none", "none"]}
               />
             </HStack>
             <HStack>
@@ -107,13 +176,19 @@ export default function Clients() {
                 icon={<AiOutlineArrowLeft />}
                 size="sm"
                 variant={"outline"}
+                onClick={() => setPage(page - 1)}
+                isDisabled={page <= 1}
               />
-              <Flex>1 / 2</Flex>
+              <Flex>
+                {page} / {pages}
+              </Flex>
               <IconButton
                 aria-label="previous"
                 icon={<AiOutlineArrowRight />}
                 size="sm"
                 variant={"outline"}
+                onClick={() => setPage(page + 1)}
+                isDisabled={page >= pages}
               />
             </HStack>
           </Flex>
