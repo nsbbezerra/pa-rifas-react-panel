@@ -2,7 +2,7 @@ import useSWR from "swr";
 import { api } from "../configs/axios";
 
 const useFetch = (url: string, refresh: number) => {
-  const { data, error, isValidating } = useSWR(
+  const { data, error, mutate } = useSWR(
     [url],
     async (url) => {
       const response = await api.get(url);
@@ -15,7 +15,7 @@ const useFetch = (url: string, refresh: number) => {
     }
   );
 
-  return { data, error, isValidating };
+  return { data, error, mutate };
 };
 
 export { useFetch };

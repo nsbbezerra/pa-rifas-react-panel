@@ -18,6 +18,7 @@ import {
   useColorModeValue,
   Skeleton,
   Stack,
+  useToast,
 } from "@chakra-ui/react";
 import { Fragment, useEffect, useState } from "react";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
@@ -39,16 +40,37 @@ type Count = {
 };
 
 export default function Clients() {
+  const toast = useToast();
   const [cpf, setCpf] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [pages, setPages] = useState<number>(0);
 
-  const { data, error, isValidating } = useFetch(
+  const { data, error } = useFetch(
     `/findAllClients/${page}/${cpf === "" ? "all" : cpf}`,
     10000
   );
 
   const [clients, setClients] = useState<Clients[]>([]);
+
+  function showToast(
+    message: string,
+    status: "error" | "info" | "warning" | "success" | undefined,
+    title: string
+  ) {
+    toast({
+      title: title,
+      description: message,
+      status: status,
+      position: "top",
+      duration: 8000,
+      isClosable: true,
+    });
+  }
+
+  if (error) {
+    let message = error.response.data.message || error.message;
+    showToast(message, "error", "Erro");
+  }
 
   useEffect(() => {
     if (data) {
@@ -59,9 +81,6 @@ export default function Clients() {
 
   function handlePagination(num: string) {
     const divisor = parseFloat(num) / configs.pagination;
-    console.log(num);
-    console.log(divisor);
-    console.log(divisor);
     if (divisor > Math.trunc(divisor) && divisor < divisor + 1) {
       setPages(Math.trunc(divisor) + 1);
     } else {
@@ -109,11 +128,6 @@ export default function Clients() {
               <Skeleton w="100%" h={7} />
               <Skeleton w="100%" h={7} />
               <Skeleton w="100%" h={7} />
-              <Skeleton w="100%" h={7} />
-              <Skeleton w="100%" h={7} />
-              <Skeleton w="100%" h={7} />
-              <Skeleton w="100%" h={7} />
-              <Skeleton w="100%" h={7} />
             </Stack>
           ) : (
             <Box overflowX={"scroll"}>
@@ -127,6 +141,9 @@ export default function Clients() {
                     <Th w="150px" minW="150px">
                       telefone
                     </Th>
+                    <Th w="150px" minW="150px">
+                      email
+                    </Th>
                   </Tr>
                 </Thead>
 
@@ -136,6 +153,9 @@ export default function Clients() {
                       <Td minW="xs">{cli.name}</Td>
                       <Td w="150px" minW="150px">
                         {cli.cpf}
+                      </Td>
+                      <Td w="150px" minW="150px">
+                        {cli.phone}
                       </Td>
                       <Td w="150px" minW="150px">
                         {cli.email}

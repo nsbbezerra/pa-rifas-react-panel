@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Clients from "../pages/Clients";
 import Index from "../pages/Index";
 import NewRaffle from "../pages/NewRaffle";
+import NewRaffleParams from "../pages/NewRaffleParams";
 import Orders from "../pages/Orders";
 import Petitions from "../pages/Petitions";
 import Raffle from "../pages/Raffle";
@@ -17,6 +18,7 @@ export default function Routing() {
       <Route path="/rifas" element={<Raffles />} />
       <Route path="/vendas/:rifa" element={<Orders />} />
       <Route path="/rifa/:rifa" element={<Raffle />} />
+      <Route path="/novarifa/:rifa" element={<NewRaffleParams />} />
     </Routes>
   );
 }
