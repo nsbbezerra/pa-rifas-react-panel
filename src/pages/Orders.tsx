@@ -116,7 +116,12 @@ export default function Orders() {
 
       const updated = await data.orders.map((ord: IOrders) => {
         if (ord.identify === identify) {
-          return { ...ord, status: "paid_out" };
+          return {
+            ...ord,
+            status: "paid_out",
+            pay_mode_id: "bank_transfer",
+            pay_mode_method: "pix",
+          };
         }
         return ord;
       });
@@ -125,6 +130,8 @@ export default function Orders() {
       mutateGlobal(`/confirmPayment/${identify}`, {
         identify: identify,
         status: "paid_out",
+        pay_mode_id: "bank_transfer",
+        pay_mode_method: "pix",
       });
       setLoading(false);
       showToast(response.data.message, "success", "Sucesso");
