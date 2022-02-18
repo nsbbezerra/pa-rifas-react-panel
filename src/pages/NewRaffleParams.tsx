@@ -136,7 +136,7 @@ export default function NewRaffleParams() {
         );
         setName(info.name);
         setQtd_numbers(info.qtd_numbers);
-        setRaffle_value(info.qtd_numbers.toString());
+        setRaffle_value(info.raffle_value.toString());
         setGoal(info.goal);
         setDescription(info.description);
         setTrophy(info.trophies);
