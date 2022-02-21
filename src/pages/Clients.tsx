@@ -92,7 +92,7 @@ export default function Clients() {
     <Fragment>
       <Header title="Clientes" />
 
-      <Container maxW={"6xl"}>
+      <Container maxW={"6xl"} mb={5}>
         <Box
           bg={useColorModeValue("white", "whiteAlpha.100")}
           rounded="md"
@@ -101,7 +101,6 @@ export default function Clients() {
           mt={5}
           px={5}
           py={3}
-          mb={5}
         >
           <FormControl>
             <FormLabel>Digite um CPF para buscar</FormLabel>

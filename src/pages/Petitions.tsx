@@ -164,7 +164,7 @@ export default function Petitions() {
       setPetitions(updated);
       setLoading(false);
       showToast(response.data.message, "success", "Sucesso");
-      setAlert(true);
+      setAlert(false);
     } catch (error) {
       setLoading(false);
       let message =

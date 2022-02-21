@@ -48,6 +48,7 @@ import format from "date-fns/format";
 import { api } from "../configs/axios";
 import InputMask from "react-input-mask";
 import axios, { AxiosError } from "axios";
+import { configs } from "../configs";
 
 registerLocale("pt_br", pt_br);
 
@@ -63,6 +64,7 @@ type IOrders = {
   pay_mode_id: string;
   pay_mode_method: string;
   status: "free" | "reserved" | "paid_out";
+  value: string;
 };
 
 type IRaffle = {
@@ -121,6 +123,8 @@ export default function Raffle() {
   const [concurso, setConcurso] = useState<string>("");
 
   const [clientWinner, setClientWinner] = useState<IWinner>();
+  const [taxes, setTaxes] = useState<number>(0);
+  const [total, setTotal] = useState<number>(0);
 
   function showToast(
     message: string,
@@ -199,9 +203,12 @@ export default function Raffle() {
     setLoading(true);
 
     try {
-      const response = await api.put(`/updateRaffleDate/${identify}`, {
-        draw_date: startDate,
-      });
+      const response = await api.put(
+        `/updateRaffleDate/${raffle?.identify || ""}`,
+        {
+          draw_date: startDate,
+        }
+      );
       showToast(
         `${response.data.message}, aguarde alguns instantes para a alteração ter efeito`,
         "success",
@@ -305,12 +312,31 @@ export default function Raffle() {
     }
   }
 
+  useEffect(() => {
+    const pix = orders.filter((obj) => obj.pay_mode_method === "pix");
+    const card = orders.filter((obj) => obj.pay_mode_id === "credit_card");
+    let somaPix = pix.reduce(function (total, numero) {
+      return total + parseFloat(numero.value);
+    }, 0);
+    let somaCard = card.reduce(function (total, numero) {
+      return total + parseFloat(numero.value);
+    }, 0);
+    let somaOrders = orders.reduce(function (total, numero) {
+      return total + parseFloat(numero.value);
+    }, 0);
+    let pix_tax = somaPix * (configs.taxes.pix / 100);
+    let card_tax = somaCard * (configs.taxes.credit / 100);
+    let sum = pix_tax + card_tax;
+    setTotal(parseFloat(somaOrders.toFixed(2)));
+    setTaxes(parseFloat(sum.toFixed(2)));
+  }, [orders]);
+
   return (
     <Fragment>
       <Header title="Informações" />
 
       <Container mt={5} mb={5} maxW={"6xl"}>
-        {orders.length === 0 ? (
+        {JSON.stringify(raffle) === "{}" ? (
           <Grid
             templateColumns={["1fr", "1fr", "1fr", "270px 1fr", "270px 1fr"]}
             gap={5}
@@ -344,7 +370,7 @@ export default function Raffle() {
                 shadow={"sm"}
                 maxW="full"
               />
-              <Box>
+              <Box w="100%">
                 <Box
                   bg={useColorModeValue("white", "whiteAlpha.100")}
                   rounded="md"
@@ -435,14 +461,21 @@ export default function Raffle() {
               mt={5}
               h="min-content"
               justify={"space-between"}
-              align={["flex-start", "center", "center", "center", "center"]}
-              direction={["column", "row", "row", "row", "row"]}
+              align={[
+                "flex-start",
+                "flex-start",
+                "flex-start",
+                "center",
+                "center",
+              ]}
+              direction={["column", "column", "column", "row", "row"]}
+              gap={[3, 3, 3, 0, 0]}
             >
               <Stat>
                 <StatLabel>Data do Sorteio</StatLabel>
                 <StatNumber>
                   {format(
-                    new Date(raffle?.draw_date || ""),
+                    new Date(raffle?.draw_date || new Date()),
                     "dd/MM/yyyy 'às' HH:mm'h'",
                     {
                       locale: pt_br,
@@ -450,7 +483,7 @@ export default function Raffle() {
                   )}
                 </StatNumber>
               </Stat>
-              <Flex align={"end"}>
+              <Flex align={"end"} w="100%" maxW={"403px"}>
                 <FormControl>
                   <FormLabel mb={0}>Nova Data</FormLabel>
                   <DatePicker
@@ -459,8 +492,7 @@ export default function Raffle() {
                     customInput={<CustomInput ref={inputRef} />}
                     locale="pt_br"
                     dateFormat="dd/MM/yyyy 'às' hh:mm aa"
-                    timeFormat="p"
-                    showTimeInput
+                    showTimeSelect
                     timeInputLabel="Horário:"
                     showPopperArrow={false}
                   />
@@ -497,7 +529,7 @@ export default function Raffle() {
               >
                 <Stat>
                   <StatLabel>Taxas de Pagamento</StatLabel>
-                  <StatNumber>R$ 10,00</StatNumber>
+                  <StatNumber>R$ {taxes}</StatNumber>
                   <StatHelpText>Cartões e PIX</StatHelpText>
                 </Stat>
               </Box>
@@ -511,8 +543,8 @@ export default function Raffle() {
               >
                 <Stat>
                   <StatLabel>Total Arrecadado</StatLabel>
-                  <StatNumber>R$ 10,00</StatNumber>
-                  <StatHelpText>Descontado R$ 53,30</StatHelpText>
+                  <StatNumber>R$ {total - taxes}</StatNumber>
+                  <StatHelpText>Descontado R$ {taxes}</StatHelpText>
                 </Stat>
               </Box>
               <Box
@@ -525,7 +557,7 @@ export default function Raffle() {
               >
                 <Stat>
                   <StatLabel>Total Bloqueado</StatLabel>
-                  <StatNumber>R$ 10,00</StatNumber>
+                  <StatNumber>R$ {total - taxes}</StatNumber>
                   <StatHelpText>Liberado após o sorteio</StatHelpText>
                 </Stat>
               </Box>
@@ -539,7 +571,7 @@ export default function Raffle() {
               >
                 <Stat>
                   <StatLabel>Total Liberado</StatLabel>
-                  <StatNumber>R$ 10,00</StatNumber>
+                  <StatNumber>R$ {total - taxes}</StatNumber>
                   <StatHelpText>Liberado após o sorteio</StatHelpText>
                 </Stat>
               </Box>
