@@ -559,6 +559,9 @@ export default function Raffles() {
                 <Radio colorScheme="blue" value="open">
                   À venda
                 </Radio>
+                <Radio colorScheme="green" value="drawn">
+                  Sorteada
+                </Radio>
                 <Radio colorScheme="red" value="cancel">
                   Cancelada
                 </Radio>
